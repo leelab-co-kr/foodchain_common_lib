@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import socket
+import requests
+import datetime
 
 from hashlib import md5
 from pymongo import MongoClient
@@ -67,3 +70,30 @@ def sql_fetch( _table, _where, _order ) :
 	for row in rows :
 		break
 	return row
+
+def get_local_ip_addr() :
+	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	s.connect(("8.8.8.8", 80))
+	ipaddr = s.getsockname()[0]
+	s.close()
+	return ipaddr
+
+"""
+Transaction status push 
+host : http://아이피:8001
+base_key :
+access_token :
+"""
+def put_txion_status( host, base_key , access_token ) :
+
+	local_addr = get_local_ip_addr()
+	now = datetime.datetime.now()
+	nowDatetime = now.strftime('%Y-%m-%d %H:%M:%S')
+	doc = {'addr':local_addr, 'datetime':nowDatetime}
+	headers = { 
+		'Authorization': 'Basic %s' % make_md5(base_key) , 
+		'access-token': '%s' % make_md5(access_token)
+	} 
+	
+	r = requests.post( host+'/txion_status',  json=doc , headers=headers) 
+	return r.content
