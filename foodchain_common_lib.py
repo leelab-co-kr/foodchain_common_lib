@@ -17,6 +17,7 @@ def get_member(mb_table, mb_id ) :
 	if mb_id == None or mb_id == "" :
 		row = { 'mb_name': '손님', 'mb_level': 0 , 'mb_id': "" }
 	else :
+		row = None
 		rows = mb_table.find({ 'mb_id': mb_id })
 		for row in rows :
 			break

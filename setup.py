@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='foodchain_common_lib',
-    version='0.0.6',
+    version='0.0.7',
     description='foodchain common library.',
     author='leelab',
     url='https://github.com/leelab/foodchain_common_lib',
