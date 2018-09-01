@@ -15,7 +15,7 @@ def make_md5(s, encoding='utf-8'):
 def get_config( cfg_table ) : 
 	row = None
 	rows = cfg_table.find()
-	for g4['config'] in rows :
+	for row in rows :
 		break
 
 	return row
