@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-import urllib.request
 import json
 import socket
 import requests
 import datetime
+try :
+	import urllib.request
+except ImportError:
+	import urllib2.request
 
 from hashlib import md5
 from pymongo import MongoClient
