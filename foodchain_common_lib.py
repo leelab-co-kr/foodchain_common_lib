@@ -12,6 +12,13 @@ from pymongo import MongoClient
 def make_md5(s, encoding='utf-8'): 
 	return md5(s.encode(encoding)).hexdigest() 
 
+def get_config( cfg_table ) : 
+	row = None
+	rows = cfg_table.find()
+	for g4['config'] in rows :
+		break
+
+	return row
 
 def get_member(mb_table, mb_id ) : 
 	if mb_id == None or mb_id == "" :
