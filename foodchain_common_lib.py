@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+import os
+import sys
+import urllib.request
+import json
 import socket
 import requests
 import datetime
@@ -97,3 +101,25 @@ def put_txion_status( host, base_key , access_token ) :
 	
 	r = requests.post( host+'/txion_status',  json=doc , headers=headers) 
 	return r.content
+'''
+Python에서 주소좌표변환 api를 호출
+'''
+def get_addr2gps( naver, addr ) :
+	client_id = naver['NAVER_MAP_CLIENT_ID']
+	client_secret = naver['NAVER_MAP_CLIENT_SECRET'] 
+	encText = urllib.parse.quote( addr )
+	url = "https://openapi.naver.com/v1/map/geocode?query=" + encText # json 결과
+	# url = "https://openapi.naver.com/v1/map/geocode.xml?query=" + encText # xml 결과
+	request = urllib.request.Request(url)
+	request.add_header("X-Naver-Client-Id",client_id)
+	request.add_header("X-Naver-Client-Secret",client_secret)
+	response = urllib.request.urlopen(request)
+	rescode = response.getcode()
+	if(rescode==200):
+		response_body = response.read()
+		res = json.loads(response_body.decode('utf-8'))
+		res = res['result']['items']
+		res = res[0]['point']
+		return str(res['y']) + "," + str(res['x'])
+	else:
+		return ""
