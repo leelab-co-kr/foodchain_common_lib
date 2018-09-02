@@ -5,6 +5,7 @@ import json
 import socket
 import requests
 import datetime
+import uuid # gen random string
 
 from hashlib import md5
 from pymongo import MongoClient
@@ -95,7 +96,7 @@ host : http://아이피:8001
 base_key :
 access_token :
 """
-def put_txion_status( host, base_key , access_token ) :
+def put_txion_status( host, base_key  ) :
 
 	local_addr = get_local_ip_addr()
 	now = datetime.datetime.now()
@@ -103,7 +104,7 @@ def put_txion_status( host, base_key , access_token ) :
 	doc = {'addr':local_addr, 'datetime':nowDatetime}
 	headers = { 
 		'Authorization': 'Basic %s' % make_md5(base_key) , 
-		'access-token': '%s' % make_md5(access_token)
+		'access-token': '%s' % str( uuid.uuid4() )
 	} 
 	
 	r = requests.post( host+'/txion_status',  json=doc , headers=headers) 
