@@ -106,6 +106,24 @@ def put_txion_status( host, base_key  ) :
 		'Authorization': 'Basic %s' % make_md5(base_key) , 
 		'access-token': '%s' % str( uuid.uuid4() )
 	} 
-	
-	r = requests.post( host+'/txion_status',  json=doc , headers=headers) 
-	return r.content
+	try :
+		r = requests.post( host+'/txion_status',  json=doc , headers=headers) 
+		return r.content
+	except :
+		return {'result':404}
+
+def put_peer_status( host, base_key  ) :
+
+	local_addr = get_local_ip_addr()
+	now = datetime.datetime.now()
+	nowDatetime = now.strftime('%Y-%m-%d %H:%M:%S')
+	doc = {'addr':local_addr, 'datetime':nowDatetime}
+	headers = { 
+		'Authorization': 'Basic %s' % make_md5(base_key) , 
+		'access-token': '%s' % str( uuid.uuid4() )
+	} 
+	try :
+		r = requests.post( host+'/peer_status',  json=doc , headers=headers) 
+		return r.content
+	except :
+		return {'result':404}
