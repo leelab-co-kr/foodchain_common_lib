@@ -127,4 +127,4 @@ def put_peer_status( host, base_key  ) :
 		r = requests.post( host+'/peer_status', verify=True, json=doc , headers=headers) 
 		return r.content
 	except Exception as e :
-		return {'result':404, 'Error: %s: %s' % (e, traceback.format_exc())}
+		return {'result':404, 'Error': '%s : %s' % (e, traceback.format_exc()) }
