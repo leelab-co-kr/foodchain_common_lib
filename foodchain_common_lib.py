@@ -108,7 +108,7 @@ def put_txion_status( host, base_key  ) :
 		'access-token': '%s' % str( uuid.uuid4() )
 	} 
 	try :
-		r = requests.post( host+'/txion_status', verify=True, json=doc , headers=headers) 
+		r = requests.post( host+'/txion_status', verify=False, json=doc , headers=headers) 
 		return r.content
 	except :
 		return {'result':404}
@@ -124,7 +124,7 @@ def put_peer_status( host, base_key  ) :
 		'access-token': '%s' % str( uuid.uuid4() )
 	} 
 	try :
-		r = requests.post( host+'/peer_status', verify=True, json=doc , headers=headers) 
+		r = requests.post( host+'/peer_status', verify=False, json=doc , headers=headers) 
 		return r.content
 	except Exception as e :
 		return {'result':404, 'Error': '%s : %s' % (e, traceback.format_exc()) }
