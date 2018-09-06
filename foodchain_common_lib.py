@@ -6,6 +6,7 @@ import socket
 import requests
 import datetime
 import uuid # gen random string
+import traceback
 
 from hashlib import md5
 from pymongo import MongoClient
@@ -125,5 +126,5 @@ def put_peer_status( host, base_key  ) :
 	try :
 		r = requests.post( host+'/peer_status', verify=True, json=doc , headers=headers) 
 		return r.content
-	except e :
-		return {'result':404, 'error': e}
+	except Exception as e :
+		return {'result':404, 'Error: %s: %s' % (e, traceback.format_exc())}
