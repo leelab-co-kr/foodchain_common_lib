@@ -11,6 +11,12 @@ import traceback
 from hashlib import md5
 from pymongo import MongoClient
 
+from ecdsa import SigningKey, VerifyingKey, BadSignatureError, NIST521p
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import AES, PKCS1_OAEP
+from Crypto.Random import get_random_bytes
+import base64
+
 def make_md5(s, encoding='utf-8'): 
 	return md5(s.encode(encoding)).hexdigest() 
 
@@ -128,3 +134,49 @@ def put_peer_status( host, base_key  ) :
 		return r.content
 	except Exception as e :
 		return {'result':404, 'Error': '%s : %s' % (e, traceback.format_exc()) }
+
+def nl2br(string, is_xhtml= True ):
+    if is_xhtml:
+        return string.replace('\n','<br />\n')
+    else :
+        return string.replace('\n','<br>\n')
+
+def getPrivateKey() :
+	sk = SigningKey.generate(curve=NIST521p) 
+	return sk.to_pem()
+
+def getPublicKey(private_key) :
+	sk = SigningKey.from_pem(private_key) 
+	vk = sk.get_verifying_key()
+	return vk.to_pem()
+
+def getVerifyKey(public_key, tx) :
+	vk = VerifyingKey.from_pem(public_key) 
+	try :
+		return vk.verify(tx['signature'] , tx['hash'].encode())
+	except BadSignatureError :
+		return False
+
+def getSigningKey(private_key, dataString) :
+	sk = SigningKey.from_pem(private_key) 
+	return sk.sign(dataString.encode())
+
+def rsa_keygen():  
+	key = RSA.generate(1024)  
+	private_key = key.export_key()
+	public_key = key.publickey().export_key()
+	return { 'private_key': private_key,  'public_key': public_key}
+
+def rsa_encrypt(msg, public_key):  
+	key = RSA.import_key(public_key )
+	cipher  = PKCS1_OAEP.new(key)
+	ciphertext = cipher.encrypt(msg.encode())
+
+	return ciphertext
+
+def rsa_decrypt(ciphertext, private_key):  
+	key = RSA.import_key(private_key )
+	cipher = PKCS1_OAEP.new(key)
+	msg  = cipher.decrypt(ciphertext)
+
+	return msg  
